@@ -64,11 +64,20 @@ def align_label_b(tokenized_input, labels, model):
     return label_list
 
 def get_predict_label(conversation, model, tokenizer):
-    inputs = tokenizer(conversation, add_special_tokens=False, return_tensors="pt")
+    inputs = tokenizer(conversation, add_special_tokens=True, return_tensors="pt")
     with torch.no_grad():
         logits = model(**inputs).logits
     predicted_token_class_ids = logits.argmax(-1)
     predicted_tokens_classes = [model.config.id2label[t.item()] for t in predicted_token_class_ids[0]]
+    del(predicted_tokens_classes[-1])
+    del(predicted_tokens_classes[0])
+    #########################
+    # 去掉与本次任务无关的标签
+    for pred_label_index in range(len(predicted_tokens_classes)):
+        if(predicted_tokens_classes[pred_label_index]!=PREVIOUS_LABEL and
+           predicted_tokens_classes[pred_label_index]!=CENTER_LABEL):
+            predicted_tokens_classes[pred_label_index]="O"
+    #########################
     return predicted_tokens_classes
 
 def align_label(sentence, label, tokenizer):
@@ -180,18 +189,18 @@ def main():
     print("There are {} conversations".format(len(conversations)))
     print("There are {} labels".format(len(labels)))
     inputs, true_labels = modify_inputs_and_labels_text1(conversations,labels,tokenizer)
-    y_true = []
-    y_pred = []
+    per_y_true = []
+    per_y_pred = []
     for i in range(len(inputs)): 
         predict_labels = get_predict_label(inputs[i], model, tokenizer)
-        y_true.append(true_labels[i])
-        y_pred.append(predict_labels)
+        per_y_true.extend(true_labels[i])
+        per_y_pred.extend(predict_labels)
     # 评估模型
-    print(f'\t\t准确率为： {accuracy_score(y_true, y_pred)}')
-    print(f'\t\t查准率为： {precision_score(y_true, y_pred)}')
-    print(f'\t\t召回率为： {recall_score(y_true, y_pred)}')
-    print(f'\t\tf1值为： {f1_score(y_true, y_pred)}')
-    print(classification_report(y_true, y_pred))
+    print(f'\t\t准确率为： {accuracy_score([per_y_true], [per_y_pred])}')
+    print(f'\t\t查准率为： {precision_score([per_y_true], [per_y_pred])}')
+    print(f'\t\t召回率为： {recall_score([per_y_true], [per_y_pred])}')
+    print(f'\t\tf1值为： {f1_score([per_y_true], [per_y_pred])}')
+    print(classification_report([per_y_true], [per_y_pred]))
     import pdb;pdb.set_trace()
 if __name__=="__main__":
     main()
