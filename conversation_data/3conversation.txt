@@ -13,7 +13,7 @@
 [USER]	:I can’t wait for him anymore
 [ADVISOR]	:at the end of the day it is a choice you have to make.
 2 3 4
-2 12 13
+2 13
 2 3 4
-2 12 13
-5 9
+2 13
+5 10 

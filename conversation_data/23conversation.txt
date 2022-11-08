@@ -9,3 +9,4 @@
 [USER]	:I hope so
 [ADVISOR]	:i can see and sense things looks good for you
 [ADVISOR]	:Everything will comes to you 
+5 0 1

@@ -63,7 +63,7 @@ def align_label_b(tokenized_input, labels, model):
     return label_list
 
 def get_predict_label(conversation, model, tokenizer):
-    inputs = tokenizer(conversation, add_special_tokens=True, return_tensors="pt")
+    inputs = tokenizer(conversation, add_special_tokens=False, return_tensors="pt")
     with torch.no_grad():
         logits = model(**inputs).logits
     predicted_token_class_ids = logits.argmax(-1)
@@ -74,7 +74,7 @@ def align_label(sentence, label, tokenizer):
     # 这里传入的label就是当前这句话中所有标记的坐标
     # 如果label为空表示这里面没有标注
     joined_sentence = " ".join(sentence)
-    inputs = tokenizer(joined_sentence, add_special_tokens=True, return_tensors="pt")
+    inputs = tokenizer(joined_sentence, add_special_tokens=False, return_tensors="pt")
     word_ids = inputs.word_ids()
     tokenized_sentence = tokenizer.convert_ids_to_tokens(inputs["input_ids"][0])
     # 计算坐标的偏移
@@ -83,7 +83,7 @@ def align_label(sentence, label, tokenizer):
         if tokenized_sentence[token_id]==None:
             continue
         if tokenized_sentence[token_id]==":":
-            label_bias = word_ids[token_id]
+            label_bias = word_ids[token_id] + 1
             break
     aligned_label = []
     for token_ids in range(len(tokenized_sentence)):
@@ -127,36 +127,36 @@ def modify_inputs_and_labels_text1(conversation_list, label_list, tokenizer):
                 user_indexs.append(index)
         for index in user_indexs:
             if(index==0 and len(conversation)>1):
-                a_sen = conversation[index]
-                b_sen = conversation[index+1]
+                a_sen = conversation[index].copy()
+                b_sen = conversation[index+1].copy()
                 a_sen.extend(b_sen)
                 sen = a_sen
-                a_label = aligned_labels[index]
-                b_label = aligned_labels[index+1]
+                a_label = aligned_labels[index].copy()
+                b_label = aligned_labels[index+1].copy()
                 a_label.extend(b_label)
                 sen_label = a_label
             elif(index==0 and len(conversation)==1):
                 sen = conversation[index]
                 sen_label = aligned_labels[index]
             elif(index==len(conversation)-1):
-                a_sen = conversation[index-1]
-                b_sen = conversation[index]
+                a_sen = conversation[index-1].copy()
+                b_sen = conversation[index].copy()
                 a_sen.extend(b_sen)
                 sen = a_sen
-                a_label = aligned_labels[index-1]
-                b_label = aligned_labels[index]
+                a_label = aligned_labels[index-1].copy()
+                b_label = aligned_labels[index].copy()
                 a_label.extend(b_label)
                 sen_label = a_label
             else:
-                a_sen = conversation[index-1]
-                b_sen = conversation[index]
-                c_sen = conversation[index+1] 
+                a_sen = conversation[index-1].copy()
+                b_sen = conversation[index].copy()
+                c_sen = conversation[index+1].copy()
                 a_sen.extend(b_sen)
                 a_sen.extend(c_sen)
                 sen = a_sen 
-                a_label = aligned_labels[index-1]
-                b_label = aligned_labels[index]
-                c_label = aligned_labels[index+1] 
+                a_label = aligned_labels[index-1].copy()
+                b_label = aligned_labels[index].copy()
+                c_label = aligned_labels[index+1].copy()
                 a_label.extend(b_label)
                 a_label.extend(c_label)
                 sen_label = a_label

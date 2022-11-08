@@ -1,4 +1,4 @@
-[ADVISOR]	:Hi love 💕 thanks for connecting with me. How are you doing today?
+[ADVISOR]	:Hi love thanks for connecting with me. How are you doing today?
 [USER]	:Are we going to be together?
 [ADVISOR]	: May I have your name and date of birth and their date of birth as well ? 
 [USER]	:My name is Yafreisi 

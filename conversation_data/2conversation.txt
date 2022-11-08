@@ -30,4 +30,4 @@
 [ADVISOR]	:It shows you are special and important for him 
 [ADVISOR]	:Though if things seem kinda stuck
 7 0 1
-7 3 4
+7 7 8
