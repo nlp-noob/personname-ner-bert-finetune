@@ -1,21 +1,10 @@
-import pandas as pd
-from datasets import load_dataset
-from evaluate import evaluator
-from transformers import pipeline
-# models = ["xlm-roberta-large-finetuned-conll03-english",
-#         "dbmdz/bert-large-cased-finetuned-conll03-english",
-#         "elastic/distilbert-base-uncased-finetuned-conll03-english",
-#         "dbmdz/electra-large-discriminator-finetuned-conll03-english",
-#         "gunghio/distilbert-base-multilingual-cased-finetuned-conll2003-ner",
-#         "philschmid/distilroberta-base-ner-conll2003",
-#         "Jorgeutd/albert-base-v2-finetuned-ner",]
+from seqeval.metrics import accuracy_score, precision_score, recall_score, f1_score
+from seqeval.metrics import classification_report
+y_true = [['O', 'O', 'O', 'B-MISC', 'I-MISC', 'I-MISC', 'O'], ['B-PER', 'I-PER', 'O']]
+y_pred = [['O', 'O', 'B-MISC', 'I-MISC', 'I-MISC', 'I-MISC', 'O'], ['B-PER', 'I-PER', 'O']]
 
-models = ["dslim/bert-base-NER"]
-data = load_dataset("conll2003", split="validation").shuffle()
-import pdb;pdb.set_trace()
-task_evaluator = evaluator("token-classification")
-results = []
-for model in models:
-    results.append(task_evaluator.compute(model_or_pipeline=model, data=data, metric="seqeval"))
-    df = pd.DataFrame(results, index=models)
-    df[["overall_f1", "overall_accuracy", "total_time_in_seconds", "samples_per_second", "latency_in_seconds"]]
+print(f'\t\t准确率为： {accuracy_score(y_true, y_pred)}')
+print(f'\t\t查准率为： {precision_score(y_true, y_pred)}')
+print(f'\t\t召回率为： {recall_score(y_true, y_pred)}')
+print(f'\t\tf1值为： {f1_score(y_true, y_pred)}')
+print(classification_report(y_true, y_pred))

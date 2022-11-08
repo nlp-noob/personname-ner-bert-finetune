@@ -109,6 +109,7 @@ def modify_inputs_and_labels_text1(conversation_list, label_list, tokenizer):
         label = label_list[i]
         user_indexs = []
         aligned_labels = []
+        #############################
         # 将label转换成tokenized的形式
         for index in range(len(conversation)):
             label_to_convert = []
@@ -121,8 +122,11 @@ def modify_inputs_and_labels_text1(conversation_list, label_list, tokenizer):
                         else:
                             a_label_in_sentence.append(one_label[label_index])
                     label_to_convert.append(a_label_in_sentence)
-            aligned_labels.append(align_label(conversation[index],label_to_convert,tokenizer))
+            aligned_labels.append(align_label(conversation[index],label_to_convert,tokenizer))    
+        # 将label转换成tokenized的形式
         ##############################
+        ##############################
+        # 按照我们需要的形式对文本进行组合，同时将label用同样的方式组合在一起
         for index in range(len(conversation)):
             if(conversation[index][0]=="[USER]"):
                 user_indexs.append(index)
@@ -176,11 +180,18 @@ def main():
     print("There are {} conversations".format(len(conversations)))
     print("There are {} labels".format(len(labels)))
     inputs, true_labels = modify_inputs_and_labels_text1(conversations,labels,tokenizer)
+    y_true = []
+    y_pred = []
     for i in range(len(inputs)): 
         predict_labels = get_predict_label(inputs[i], model, tokenizer)
-        if len(true_labels[i])!=len(predict_labels):
-            print("true label len:{}, predict label len:{}".format(len(true_labels[i]),len(predict_labels)))
-            print(i)
+        y_true.append(true_labels[i])
+        y_pred.append(predict_labels)
+    # 评估模型
+    print(f'\t\t准确率为： {accuracy_score(y_true, y_pred)}')
+    print(f'\t\t查准率为： {precision_score(y_true, y_pred)}')
+    print(f'\t\t召回率为： {recall_score(y_true, y_pred)}')
+    print(f'\t\tf1值为： {f1_score(y_true, y_pred)}')
+    print(classification_report(y_true, y_pred))
     import pdb;pdb.set_trace()
 if __name__=="__main__":
     main()
