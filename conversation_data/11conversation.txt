@@ -1,0 +1,11 @@
+[ADVISOR]	:Can I have your name and date of birth please
+[USER]	:Kendra 03/07/1988
+[ADVISOR]	:I am picking up that you are confused about a certain person
+[USER]	:yes
+[ADVISOR]	: Can I have the person’s first name and date of birth please
+[USER]	:Angela 12/18/1990
+[ADVISOR]	: Hello are you there
+[ADVISOR]	: Well I am saying that you are very confused about this person’s feelings towards you why are you still confused about this person with u
+[ADVISOR]	: why are you doubting you and  this person so much 
+2 0
+6 0

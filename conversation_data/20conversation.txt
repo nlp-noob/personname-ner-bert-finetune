@@ -1,0 +1,6 @@
+[ADVISOR]	:Hello how can I help you today? 
+[USER]	:My name is ?
+[USER]	:Do she love me? 
+[ADVISOR]	:Your name is ?
+[USER]	:Donnay
+5 0

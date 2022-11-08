@@ -1,0 +1,8 @@
+[ADVISOR]	:hello how can I help you? 
+[USER]	:hi, I was wondering if u could help me figure out a couple of things ab me spiritually
+[USER]	:a guide?
+[ADVISOR]	:sure. your name and date of birth as well as your first question? 
+[USER]	:Kaitlyn, 08-24-2004, how do I turn out spiritually? like, how do I continue with ut
+[USER]	:it*
+[ADVISOR]	:you’ll need to really allow your spirituality to manifest and grow. through meditations and building 
+5 0

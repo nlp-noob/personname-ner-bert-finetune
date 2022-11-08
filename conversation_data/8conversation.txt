@@ -1,0 +1,19 @@
+[USER]	:My name is Varun , I was born in Jan 9, 1999, My gender is Male.
+[USER]	:Hey again 
+[ADVISOR]	:Ho
+[ADVISOR]	: Hi how can I help you 
+[USER]	:I wanted to ask if Resham is thinking about me 
+[USER]	:Feb 3 1999 
+[ADVISOR]	:Yes from what I can see she is thinking about you a lot
+[ADVISOR]	:Yes from what I can see she is thinking about you a lot
+[USER]	:Sure?
+[USER]	:Will she reach out soon?
+[ADVISOR]	: Yes I am for sure I see that she does miss you she is thinking about you but I do know she has a lot going on right now but she is really missing you and she is going to initiate some kind of communication soon  
+[USER]	:Will she be my friend again?
+[USER]	:Or is it over?
+[ADVISOR]	: Yes you and her will be friends again  
+[ADVISOR]	:No it is not over 
+[USER]	:Does she miss me a lot? 
+[ADVISOR]	: Yes she does miss you a lot and she thinks about you all the time 
+1 3
+5 5

@@ -1,0 +1,4 @@
+[ADVISOR]	:hi
+[ADVISOR]	:hru
+[ADVISOR]	:good to see u
+[USER]	:This last guy I didn’t like and have no attention on seeing him

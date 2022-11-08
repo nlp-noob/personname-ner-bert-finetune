@@ -1,0 +1,10 @@
+[ADVISOR]	:Can I have your name and date of birth please
+[USER]	:June 19 2001
+[ADVISOR]	: I am seeing that you are confuse about a certain person and their feelings towards you can I have a person‘s first name and date of birth plz
+[USER]	:Eddravian February 6 2001
+[ADVISOR]	:My Energy Is showing me that you want this person is going to be OK on this person is going to make things work but right now you need to be patient because both of you guys are going through a lot of personal problems a lot of personal changes right now that’s why this person is very confused about all of this
+[ADVISOR]	: Is this correct 
+[USER]	:Yes
+[ADVISOR]	:How long had you been knoing him 
+[USER]	:6years
+4 0

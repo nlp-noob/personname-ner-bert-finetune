@@ -1,0 +1,15 @@
+[ADVISOR]	:Hello 
+[USER]	:Hi!
+[ADVISOR]	:How are you doing this evening ? 
+[USER]	:Pretty good you ?
+[ADVISOR]	:Good thanks ! 
+[ADVISOR]	:How can I help you 
+[USER]	:So I’m a girl and I have a crush on this one girl and I wanna know if she like me 
+[ADVISOR]	:Okay sure I’ll take a loook 
+[ADVISOR]	:Can I have your name and birthday please and hers 
+[USER]	:My name is Sarah and my birthday is the 7 November and her name is zoe and her birthday is the 8 February 
+[ADVISOR]	:Okay one moment Sarah 
+[USER]	:Thanks :)
+10 3
+10 15
+11 3

@@ -1,0 +1,19 @@
+[ADVISOR]	:hello how can I help you today? 
+[USER]	:My name is Emily Rathbone May 22, 1980 to my POA is Jesse April 5, 1987 and I was just wondering if he has been thinking about me and misses me and if we will get back together
+[USER]	:My name is Emily Rathbone May 22, 1980 to my POA is Jesse April 5, 1987 and I was just wondering if he has been thinking about me and misses me and if we will get back together
+[USER]	:my birthdate is 1982
+[ADVISOR]	:from what I am picking up, I feel that Jesse does still have feelings for you and does still care about you. I can see that he does think about you from time to time but isn’t quite sure as to where things are headed and if it’s something he should try to rekindle 
+[ADVISOR]	:mainly because he is always overthinking. not ready to settle down or really commit. 
+[ADVISOR]	:that’s a big reason why he stays away, he isn’t sure if it’s something he can put his all into. 
+[USER]	:oh
+[ADVISOR]	:but when it comes down to it the connection he feels with you is something he hasn’t let go of. 
+[ADVISOR]	:he does want you to be apart of your life but in all truth he isn’t ready for it. 
+[ADVISOR]	:he still needs time to come to himself and find his way in your relationship. 
+[USER]	:then I shall move on
+[USER]	:I can’t wait for him anymore
+[ADVISOR]	:at the end of the day it is a choice you have to make.
+2 3 4
+2 12 13
+2 3 4
+2 12 13
+5 9

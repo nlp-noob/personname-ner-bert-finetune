@@ -1,0 +1,25 @@
+[USER]	:My name is Varun , I was born in Jan 9, 1999, My gender is Male.
+[USER]	:Hi 
+[ADVISOR]	:Hi
+[USER]	:Want to ask if she is unbothered by me
+[ADVISOR]	: How can I help you today
+[USER]	:And if she doesn’t care
+[USER]	:Resham 
+[USER]	:Feb 3 1999
+[ADVISOR]	: She does care and no you are not a bother to her 
+[USER]	:No reconciliation?
+[ADVISOR]	:She does want to come closer towards you and I definitely see right now she’s got a lot going on but she’s having a really tough time with it
+[ADVISOR]	:She does want to come closer towards you and I definitely see right now she’s got a lot going on but she’s having a really tough time with it
+[USER]	: No apologies 
+[USER]	:No friendship restored
+[USER]	:Does she really care at all?
+[ADVISOR]	:It will take time because she’s going through so much right now and it’s gonna take time for her to come forward and to be herself
+[ADVISOR]	:It will take time because she’s going through so much right now and it’s gonna take time for her to come forward and to be herself
+[USER]	:What’s the point
+[USER]	:We’ve lost so much time together 
+[ADVISOR]	:I know it’s very hard for you to see this right now and this is causing you a lot of emotional stress
+[ADVISOR]	:I know it’s very hard for you to see this right now and this is causing you a lot of emotional stress
+[ADVISOR]	: I know you guys did but you guys will come back together but it will take a little time for her to find herself over, situation and be able to come forward 
+[ADVISOR]	: I see that she will come forward and once she does she will continuously coming forward and I do see things working out there is new doors opening and positive changes coming for the both of you
+1 3
+7 0

@@ -1,0 +1,11 @@
+[USER]	:I just want my cards read
+[ADVISOR]	:Yes
+[USER]	:So how does it work
+[ADVISOR]	:Send me your name with full date of birth 
+[USER]	:Tyaisha hamilton 11/16/93
+[ADVISOR]	:Ok
+[ADVISOR]	:i can see and sense things work slow right now but everything will come to you 
+[ADVISOR]	:your love life going to improved
+[USER]	:I hope so
+[ADVISOR]	:i can see and sense things looks good for you
+[ADVISOR]	:Everything will comes to you 

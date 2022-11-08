@@ -1,0 +1,20 @@
+[ADVISOR]	:Hi
+[ADVISOR]	:Hru
+[ADVISOR]	:Good to see u
+[ADVISOR]	:How can I help u
+[USER]	:A love reading 
+[ADVISOR]	:Names dob both of you
+[USER]	:Brandy Hall 8/4/1994 & Michael sosa don't know the birthday
+[ADVISOR]	:Let me see 
+[USER]	:Are we going to be together?
+[ADVISOR]	:Yes
+[ADVISOR]	:There will be good future 
+[ADVISOR]	:But 
+[ADVISOR]	:It will take time
+[USER]	:he will take time 
+[ADVISOR]	:He having some issues
+[ADVISOR]	:Few issues between both of you 
+[ADVISOR]	:Where I feel both of you should work on
+[USER]	:Do you know when he will come in contact with me
+7 0 1
+7 4 5

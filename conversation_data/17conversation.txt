@@ -1,0 +1,10 @@
+[ADVISOR]	:hello how can I help you today? 
+[USER]	:me n my ex broke up today and I can’t get over her, we will get bs k together? 
+[ADVISOR]	:I can take a look into it for you. 
+[ADVISOR]	:can you provide me with names and date of birth’s? 
+[USER]	:mine is Katrina Duncan 06-18-02
+[USER]	:hers is Amira rincon 5-1-02
+[ADVISOR]	:from what I am picking up, I feel that you two are going to rekindle and get back together. right now she is in her own head and wanting space. she needs to think things through 
+[ADVISOR]	:but ultimately she will decide to get back with you I feel 
+5 2 3
+6 2 3

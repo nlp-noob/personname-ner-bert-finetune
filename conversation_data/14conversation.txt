@@ -1,0 +1,9 @@
+[ADVISOR]	:Hi love 💕 thanks for connecting with me. How are you doing today?
+[USER]	:Are we going to be together?
+[ADVISOR]	: May I have your name and date of birth and their date of birth as well ? 
+[USER]	:My name is Yafreisi 
+[USER]	:My date of birth is 16-04-1999
+[USER]	:01-03-1999
+[ADVISOR]	: I feel you guys have a good connection with each other it’s likely you will be together 
+[ADVISOR]	: He has romantic feelings for you and feels attached to you
+4 3

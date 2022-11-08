@@ -1,0 +1,33 @@
+[ADVISOR]	:Hi
+[ADVISOR]	:Hru
+[ADVISOR]	:God to see u
+[ADVISOR]	:How can I help u
+[USER]	:Can you tell me when he will be in contact with me we are in separation
+[ADVISOR]	:Names dob of u
+[USER]	:Brandy Hall 8/4/1994 Michael sosa 
+[ADVISOR]	:Let me see
+[ADVISOR]	:This mid of year 
+[ADVISOR]	:He will communicate 
+[ADVISOR]	:He still loves u
+[ADVISOR]	:He having some issues
+[ADVISOR]	:That making distance 
+[ADVISOR]	:But he will make good effort
+[ADVISOR]	:Few issues where I feel both of you should work on 
+[USER]	:Does he miss me?
+[ADVISOR]	:Communication gap, lack of sharing and understanding issues
+[ADVISOR]	:Yes
+[ADVISOR]	:You are his mind
+[ADVISOR]	:He can't forget you for a moment
+[USER]	:Wi he contact me this week or weekend
+[ADVISOR]	:He have alot of things. That remind him of you 
+[ADVISOR]	:Coming month 
+[ADVISOR]	:Willl bless with alot
+[ADVISOR]	:All wishes and dreams going to come true 
+[ADVISOR]	:He is your soulmate 
+[ADVISOR]	:He also missing you badly 
+[ADVISOR]	:He never feel like this for anyone else
+[ADVISOR]	:As he feel for you 
+[ADVISOR]	:It shows you are special and important for him 
+[ADVISOR]	:Though if things seem kinda stuck
+7 0 1
+7 3 4
