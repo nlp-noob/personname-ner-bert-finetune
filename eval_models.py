@@ -2,7 +2,8 @@ import os
 import re
 import torch
 from transformers import AutoTokenizer, AutoModelForTokenClassification
-
+from seqeval.metrics import accuracy_score, precision_score, recall_score, f1_score
+from seqeval.metrics import classification_report
 
 # 是否把sub-word全部标记的选项
 LABEL_ALL_TOKENS = True
