@@ -64,6 +64,7 @@ def align_label_b(tokenized_input, labels, model):
     return label_list
 
 def get_predict_label(conversation, model, tokenizer):
+    # 这里的add_special_tokens要根据模型而定，通过之前的测试，这个模型添加这个得到的推导结果比不添加好得多。 
     inputs = tokenizer(conversation, add_special_tokens=True, return_tensors="pt")
     with torch.no_grad():
         logits = model(**inputs).logits
