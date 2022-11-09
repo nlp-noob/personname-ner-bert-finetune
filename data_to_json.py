@@ -49,12 +49,20 @@ def get_conversation():
             conversation_list.append(conversation_to_append)
     print("There are {} conversations.".format(len(conversation_list)))
     # 逐个conversation进行处理
+    conversation_json = {}
     for conversation_index in range(len(conversation_list)):
         conversation = conversation_list[conversation_index]
         have_advisor = 0
         have_name = True
-        for line in conversation:
-            name_list = re.findall(".*\t(.*)\t:.*", line)
+        conversation_dict = {}
+        for line_index in range(len(conversation)):
+            a_sentence_dict = {}
+            name_list = re.findall(".*\t(.*)\t:.*", conversation[line_index])
+            text_list = re.findall(".*\t:(.*)",conversation[line_index])
+            if(len(text_list)==0):
+                text = ''
+            else:
+                text = text_list[0]
             # 假如没有名字，那么就是说相应的name对应的就是上一个name
             if(len(name_list)!=0):
                 name = name_list[0] 
@@ -62,12 +70,20 @@ def get_conversation():
             else:
                 have_name = False
             if name_is_in_list(name,ADVISOR_LIST):
+                conversation_dict["character"] = "ADVISOR"
                 have_advisor = 1
+            else: 
+                conversation_dict["character"] = "USER" 
+            conversation_dict["name"] = name
+            conversation_dict["text"] = text
+        conversation_json[conversation_index] = conversation_dict 
         if(have_advisor==0):
             print("warning: can't catch the advisor. please add it in the list a the bottom of the code")
             print("can't find in conversation{}".format(conversation_index))
             print(conversation)
-        
+    json_str = json.dumps(conversation_json)
+    with open("conversation_data/data.json", "w") as jf:
+        jf.write(json_str)
     
 def main():
     get_conversation()
