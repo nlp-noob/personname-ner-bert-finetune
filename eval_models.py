@@ -11,6 +11,8 @@ LABEL_ALL_TOKENS = True
 PREVIOUS_LABEL = "B-PER"
 CENTER_LABEL = "I-PER"
 
+#################################################
+# 此处需要优化成为json格式
 def get_conversations_and_labels():
     file_list = os.listdir("conversation_data")
     conversation_list = []
@@ -37,6 +39,7 @@ def get_conversations_and_labels():
         label_list.append(label)
         conversation_list.append(conversation)
     return label_list, conversation_list
+###################################################
 
 def align_label_b(tokenized_input, labels, model):
     word_ids = tokenized_input.word_ids()
