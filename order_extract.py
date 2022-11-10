@@ -46,6 +46,7 @@ def extract_order(fin):
         is_user = not is_name_in_list(sender, ADVISOR_LIST)
         order.append([is_user, txt])
 
+    import pdb; pdb.set_trace()
     if order:
         orders.append(order)
 

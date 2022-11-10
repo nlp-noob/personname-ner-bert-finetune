@@ -10,6 +10,15 @@ LABEL_ALL_TOKENS = True
 # 设置打标签的名字，分别对应前面的标签和后面的标签
 PREVIOUS_LABEL = "B-PER"
 CENTER_LABEL = "I-PER"
+ALL_LABEL = "PER"
+
+# 设置是否有前缀：
+HAVE_PRE = True
+# 设置窗口大小(决定实时识别)
+SLIDING_WIN_SIZE = 1
+
+# 检查模型label的列表
+CHECK_LABEL_LIST = []
 
 #################################################
 # 此处需要优化成为json格式
@@ -18,6 +27,8 @@ def get_conversations_and_labels():
     conversation_list = []
     label_list = []
     for file_name in file_list:
+        if not ".txt" in file_name:
+            continue
         f = open("conversation_data/"+file_name)
         lines = f.readlines()
         conversation = [] 
@@ -39,47 +50,36 @@ def get_conversations_and_labels():
         label_list.append(label)
         conversation_list.append(conversation)
     return label_list, conversation_list
+
+def check_the_label(predicted_token_classes):
+    for pred_class in predicted_token_classes:
+        if pred_class!='O' and pred_class not in CHECK_LABEL_LIST:
+            CHECK_LABEL_LIST.append(pred_class)
+
 ###################################################
 
-def align_label_b(tokenized_input, labels, model):
-    word_ids = tokenized_input.word_ids()
-    previous_word_idx = None
-    label_ids = []
-    for word_idx in word_ids:
-        # print(word_idx)
-        if word_idx is None:
-            label_ids.append(-100)      
-        elif word_idx != previous_word_idx:
-            try:
-                label_ids.append(model.config.label2id[labels[word_idx]])
-            except:
-                label_ids.append(-100)
-        else:
-            label_ids.append(model.config.label2id[labels[word_idx]] if LABEL_ALL_TOKENS else -100)
-        previous_word_idx = word_idx                  
-    label_list = []
-    for label_id in label_ids:
-        if(label_id==-100):
-            label_list.append("O")
-        else:
-            label_list.append(model.config.id2label[label_id])
-    
-    return label_list
-
-def get_predict_label(conversation, model, tokenizer):
+def get_predict_label(conversation, model, tokenizer, add_special_tokens):
     # 这里的add_special_tokens要根据模型而定，通过之前的测试，这个模型添加这个得到的推导结果比不添加好得多。 
-    inputs = tokenizer(conversation, add_special_tokens=True, return_tensors="pt")
+    inputs = tokenizer(conversation, add_special_tokens=add_special_tokens, return_tensors="pt")
     with torch.no_grad():
         logits = model(**inputs).logits
     predicted_token_class_ids = logits.argmax(-1)
     predicted_tokens_classes = [model.config.id2label[t.item()] for t in predicted_token_class_ids[0]]
-    del(predicted_tokens_classes[-1])
-    del(predicted_tokens_classes[0])
+    check_the_label(predicted_tokens_classes)
+    if(add_special_tokens):
+        del(predicted_tokens_classes[-1])
+        del(predicted_tokens_classes[0])
     #########################
     # 去掉与本次任务无关的标签
+    # 输出一下任务的标签
+    not_O_is_print = False
     for pred_label_index in range(len(predicted_tokens_classes)):
+        if(predicted_tokens_classes[pred_label_index]!="O" and not_O_is_print):
+            print(predicted_tokens_classes[pred_label_index])
+            not_O_is_print = True
         if(predicted_tokens_classes[pred_label_index]!=PREVIOUS_LABEL and
-           predicted_tokens_classes[pred_label_index]!=CENTER_LABEL):
+           predicted_tokens_classes[pred_label_index]!=CENTER_LABEL and
+           predicted_tokens_classes[pred_label_index]!=ALL_LABEL):
             predicted_tokens_classes[pred_label_index]="O"
     #########################
     return predicted_tokens_classes
@@ -96,7 +96,7 @@ def align_label(sentence, label, tokenizer):
     for token_id in range(len(tokenized_sentence)):
         if tokenized_sentence[token_id]==None:
             continue
-        if tokenized_sentence[token_id]==":":
+        if ":" in tokenized_sentence[token_id]:
             label_bias = word_ids[token_id] + 1
             break
     aligned_label = []
@@ -105,9 +105,9 @@ def align_label(sentence, label, tokenizer):
     for a_label in label:
         for label_index in range(len(a_label)):
             if(label_index==0):
-                label_name = PREVIOUS_LABEL
+                label_name = PREVIOUS_LABEL if HAVE_PRE else ALL_LABEL
             else:
-                label_name = CENTER_LABEL
+                label_name = CENTER_LABEL if HAVE_PRE else ALL_LABEL
             for label_to_modify_index in range(len(aligned_label)):
                 if word_ids[label_to_modify_index]==a_label[label_index]+label_bias:
                    aligned_label[label_to_modify_index]=label_name
@@ -184,27 +184,120 @@ def modify_inputs_and_labels_text1(conversation_list, label_list, tokenizer):
             labels.append(sen_label)
     return inputs, labels
 
+# 用来产生文本形式的输入输出的函数
+def modify_inputs_and_labels_text1_WIN(conversation_list, label_list, tokenizer):
+    inputs = []
+    labels = []
+    for i in range(len(conversation_list)):
+        conversation = conversation_list[i]
+        label = label_list[i]
+        user_indexs = []
+        aligned_labels = []
+        #############################
+        # 将label转换成tokenized的形式
+        for index in range(len(conversation)):
+            label_to_convert = []
+            for one_label in label:
+                if(len(one_label)>0 and one_label[0]==(index+1)):
+                    a_label_in_sentence = []
+                    for label_index in range(len(one_label)):
+                        if label_index==0:
+                            continue
+                        else:
+                            a_label_in_sentence.append(one_label[label_index])
+                    label_to_convert.append(a_label_in_sentence)
+            aligned_labels.append(align_label(conversation[index],label_to_convert,tokenizer))    
+        # 将label转换成tokenized的形式
+        ##############################
+        ##############################
+        # 按照我们需要的形式对文本进行组合，同时将label用同样的方式组合在一起
+        # 这里把所有的user的坐标记录下来
+        for index in range(len(conversation)):
+            if(conversation[index][0]=="[USER]"):
+                user_indexs.append(index)
+        for index in user_indexs:
+            sen = conversation[index].copy()
+            sen_label = aligned_labels[index].copy()
+            for up_index in range(SLIDING_WIN_SIZE+1):
+                if((index-up_index-1)>=0):
+                    import pdb; pdb.set_trace()
+                    sen = conversation[index-up_index-1] + sen
+                    sen_label = aligned_labels[index-up_index-1] + sen_label
+                symbol = ' '
+                sen = symbol.join(sen)
+                inputs.append(sen)
+                labels.append(sen_label)
+    return inputs, labels
+
+def get_eval(per_y_true, per_y_pred):
+    print("len per_y_true: "+str(len(per_y_true)))
+    print("len per_y_pred: "+str(len(per_y_pred)))
+    print("**"*20)
+    True_P = 0
+    False_P = 0
+    False_N = 0
+    for true_label, pred_label in zip(per_y_true, per_y_pred):
+        if(true_label!='O' and true_label==pred_label):
+            True_P += 1
+        elif(pred_label!='O' and true_label!=pred_label):
+            False_P += 1
+        elif(pred_label=='O' and true_label!='O'):
+            False_N += 1
+    print(True_P)
+    print(False_P)
+    print(False_N)
+    Precision = True_P/(True_P + False_P)
+    Recall = True_P/(True_P + False_N)
+    F1 = 2*Precision*Recall/(Precision+Recall)
+    print("The Precision is:\t {}".format(Precision))
+    print("The Recall is:\t\t {}".format(Recall))
+    print("The F1 is:\t\t {}".format(F1))
+    pass
+
 def main():
-    model_path = "dslim/bert-base-NER"
+    # model_path = "dslim/bert-base-NER"
+    model_path = "Davlan/bert-base-multilingual-cased-ner-hrl"
+    print("the model is: {}".format(model_path))
+    # model_path = "Jean-Baptiste/roberta-large-ner-english"
     tokenizer = AutoTokenizer.from_pretrained(model_path)
     model = AutoModelForTokenClassification.from_pretrained(model_path)
+    print("=="*20)
+    print("这一部分是基于后期识别的(非实时)")
     labels, conversations = get_conversations_and_labels()
-    print(labels)
     print("There are {} conversations".format(len(conversations)))
     print("There are {} labels".format(len(labels)))
     inputs, true_labels = modify_inputs_and_labels_text1(conversations,labels,tokenizer)
     per_y_true = []
     per_y_pred = []
     for i in range(len(inputs)): 
-        predict_labels = get_predict_label(inputs[i], model, tokenizer)
+        predict_labels = get_predict_label(inputs[i], model, tokenizer, add_special_tokens=True)
         per_y_true.extend(true_labels[i])
         per_y_pred.extend(predict_labels)
-    # 评估模型
-    print(f'\t\t准确率为： {accuracy_score([per_y_true], [per_y_pred])}')
-    print(f'\t\t查准率为： {precision_score([per_y_true], [per_y_pred])}')
-    print(f'\t\t召回率为： {recall_score([per_y_true], [per_y_pred])}')
-    print(f'\t\tf1值为： {f1_score([per_y_true], [per_y_pred])}')
-    print(classification_report([per_y_true], [per_y_pred]))
-    import pdb;pdb.set_trace()
+    # 输出一下label检查设置的有没有出错：
+    print("**"*20)
+    print("The Check Label List is {}".format(CHECK_LABEL_LIST))
+    print("**"*20)
+    get_eval(per_y_true, per_y_pred)
+    print("=="*20)
+    print("=="*20)
+    print("这一部分是基于滑动窗口进行评估的(实时)")
+    print("**"*20)
+    print("The Sliding Window size is: {}".format(SLIDING_WIN_SIZE))
+    print("**"*20)
+    inputs, true_labels = modify_inputs_and_labels_text1_WIN(conversations,labels,tokenizer)
+    per_y_true = []
+    per_y_pred = []
+    for i in range(len(inputs)): 
+        predict_labels = get_predict_label(inputs[i], model, tokenizer, add_special_tokens=True)
+        per_y_true.extend(true_labels[i])
+        per_y_pred.extend(predict_labels)
+    # 输出一下label检查设置的有没有出错：
+    print("**"*20)
+    print("The Check Label List is {}".format(CHECK_LABEL_LIST))
+    print("**"*20)
+    get_eval(per_y_true, per_y_pred)
+    print("=="*20)
+
+
 if __name__=="__main__":
     main()
