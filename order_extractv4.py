@@ -66,9 +66,6 @@ def extract_order(fin):
                    "order": an_order,
                    "label": LABEL_LIST[-1]})
     print(len(orders))
-    # for order in orders:
-    #     print(order)
-    #     print("**"*20)
     return orders
             
 def main():
@@ -76,7 +73,7 @@ def main():
     with open(txt_file, 'r') as fin:
         orders = extract_order(fin)
     json_str = json.dumps(orders)
-    with open("conversation_data/data.json", "w") as jf: 
+    with open("conversation_data/data4.json", "w") as jf: 
         jf.write(json_str)
 
 

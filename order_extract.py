@@ -21,6 +21,7 @@ def is_name_in_list(name,name_list):
 def extract_order(fin):
     orders = []
     order = []
+    import pdb;pdb.set_trace()
     for line in fin:
 
         if not line.strip():

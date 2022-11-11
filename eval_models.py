@@ -1,6 +1,8 @@
 import os
 import re
+import time
 import torch
+import json
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 from seqeval.metrics import accuracy_score, precision_score, recall_score, f1_score
 from seqeval.metrics import classification_report
@@ -15,21 +17,39 @@ ALL_LABEL = "PER"
 # 设置是否有前缀：
 HAVE_PRE = True
 # 设置窗口大小(决定实时识别)
-SLIDING_WIN_SIZE = 1
+MAX_SLIDING_WIN_SIZE = 10
 
 # 检查模型label的列表
 CHECK_LABEL_LIST = []
 
 #################################################
-# 此处需要优化成为json格式
+def get_data_from_json():
+    file_name = "conversation_data/data5.json"
+    with open(file_name, 'r') as jf:
+        data = json.loads(jf.read())
+        conversation_list = []
+        conversation = []
+        label_list = []
+        for item in data:
+            for sentence in item["order"]:
+                n_sentence = []
+                n_sentence.append(sentence[0])
+                n_sentence.append(":") 
+                n_sentence.extend(sentence[1].split())
+                conversation.append(n_sentence)
+            conversation_list.append(conversation)
+            conversation = []
+            label_list.append(item["label"])
+    return label_list, conversation_list
+
+
+#################################################
 def get_conversations_and_labels():
     file_list = os.listdir("conversation_data")
     conversation_list = []
     label_list = []
-    for file_name in file_list:
-        if not ".txt" in file_name:
-            continue
-        f = open("conversation_data/"+file_name)
+    for file_name_num in range(len(file_list)-1):
+        f = open("conversation_data/"+str(file_name_num+1)+"conversation.txt")
         lines = f.readlines()
         conversation = [] 
         label = []
@@ -185,7 +205,7 @@ def modify_inputs_and_labels_text1(conversation_list, label_list, tokenizer):
     return inputs, labels
 
 # 用来产生文本形式的输入输出的函数
-def modify_inputs_and_labels_text1_WIN(conversation_list, label_list, tokenizer):
+def modify_inputs_and_labels_text1_WIN(conversation_list, label_list, tokenizer, sliding_win_size):
     inputs = []
     labels = []
     for i in range(len(conversation_list)):
@@ -218,15 +238,14 @@ def modify_inputs_and_labels_text1_WIN(conversation_list, label_list, tokenizer)
         for index in user_indexs:
             sen = conversation[index].copy()
             sen_label = aligned_labels[index].copy()
-            for up_index in range(SLIDING_WIN_SIZE+1):
+            for up_index in range(sliding_win_size+1):
                 if((index-up_index-1)>=0):
-                    import pdb; pdb.set_trace()
                     sen = conversation[index-up_index-1] + sen
                     sen_label = aligned_labels[index-up_index-1] + sen_label
-                symbol = ' '
-                sen = symbol.join(sen)
-                inputs.append(sen)
-                labels.append(sen_label)
+            symbol = ' '
+            sen = symbol.join(sen)
+            inputs.append(sen)
+            labels.append(sen_label)
     return inputs, labels
 
 def get_eval(per_y_true, per_y_pred):
@@ -255,6 +274,21 @@ def get_eval(per_y_true, per_y_pred):
     pass
 
 def main():
+    # labels, conversations = get_conversations_and_labels()
+    labels, conversations = get_data_from_json()
+    print(labels)
+    # num = 0
+    # for conversation in conversations:
+    #     print("**"*20)
+    #     print(num)
+    #     line_num = 1
+    #     for line in conversation:
+    #         print(line)
+    #         print(line_num)
+    #         print("--"*20)
+    #         line_num += 1
+    #     num += 1
+    # return
     # model_path = "dslim/bert-base-NER"
     model_path = "Davlan/bert-base-multilingual-cased-ner-hrl"
     print("the model is: {}".format(model_path))
@@ -263,12 +297,13 @@ def main():
     model = AutoModelForTokenClassification.from_pretrained(model_path)
     print("=="*20)
     print("这一部分是基于后期识别的(非实时)")
-    labels, conversations = get_conversations_and_labels()
+    print(labels)
     print("There are {} conversations".format(len(conversations)))
     print("There are {} labels".format(len(labels)))
     inputs, true_labels = modify_inputs_and_labels_text1(conversations,labels,tokenizer)
     per_y_true = []
     per_y_pred = []
+    start_time = time.time()
     for i in range(len(inputs)): 
         predict_labels = get_predict_label(inputs[i], model, tokenizer, add_special_tokens=True)
         per_y_true.extend(true_labels[i])
@@ -278,25 +313,24 @@ def main():
     print("The Check Label List is {}".format(CHECK_LABEL_LIST))
     print("**"*20)
     get_eval(per_y_true, per_y_pred)
+    end_time = time.time()
+    print("Using time: {}".format(end_time-start_time))
     print("=="*20)
     print("=="*20)
     print("这一部分是基于滑动窗口进行评估的(实时)")
-    print("**"*20)
-    print("The Sliding Window size is: {}".format(SLIDING_WIN_SIZE))
-    print("**"*20)
-    inputs, true_labels = modify_inputs_and_labels_text1_WIN(conversations,labels,tokenizer)
-    per_y_true = []
-    per_y_pred = []
-    for i in range(len(inputs)): 
-        predict_labels = get_predict_label(inputs[i], model, tokenizer, add_special_tokens=True)
-        per_y_true.extend(true_labels[i])
-        per_y_pred.extend(predict_labels)
-    # 输出一下label检查设置的有没有出错：
-    print("**"*20)
-    print("The Check Label List is {}".format(CHECK_LABEL_LIST))
-    print("**"*20)
-    get_eval(per_y_true, per_y_pred)
-    print("=="*20)
+    for sliding_win_size in range(MAX_SLIDING_WIN_SIZE+1):
+        print("**"*20)
+        print("The Sliding Window size is: {}".format(sliding_win_size+1))
+        print("**"*20)
+        inputs, true_labels = modify_inputs_and_labels_text1_WIN(conversations,labels,tokenizer, sliding_win_size+1)
+        per_y_true = []
+        per_y_pred = []
+        for i in range(len(inputs)): 
+            predict_labels = get_predict_label(inputs[i], model, tokenizer, add_special_tokens=True)
+            per_y_true.extend(true_labels[i])
+            per_y_pred.extend(predict_labels)
+        get_eval(per_y_true, per_y_pred)
+        print("=="*20)
 
 
 if __name__=="__main__":
